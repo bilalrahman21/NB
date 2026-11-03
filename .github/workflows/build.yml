@@ -9,8 +9,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Unzip project
-        run: unzip -o NB.zip
+        with:
+          fetch-depth: 0
+      - name: Unzip newest project
+        run: |
+          f=$(git log -1 --diff-filter=AM --name-only --pretty=format: -- '*.zip' | grep . | head -1)
+          echo "Using $f"
+          rm -rf NB
+          unzip -o "$f"
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
